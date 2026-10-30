@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Pokédex</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <header>
+        <h1>Minha Pokédex</h1>
+        <p>Pesquise seu Pokémon favorito!</p>
+    </header>
+
+    <main>
+        <form id="form-busca">
+            <input type="text" id="nome-pokemon"
+                placeholder="Ex.: Pikachu"
+                aria-label="Nome ou número do Pokémon">
+            <button type="submit">Buscar</button>
+        </form>
+
+        <p id="mensagem" role="status"></p>
+        <section id="resultado" aria-live="polite"></section>
+    </main>
+</body>
+</html>

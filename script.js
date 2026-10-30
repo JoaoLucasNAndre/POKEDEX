@@ -1,7 +1,29 @@
+
 const formulario = document.getElementById("form-busca");
 const campoNome = document.getElementById("nome-pokemon");
 const resultado = document.getElementById("resultado");
 const mensagem = document.getElementById("mensagem");
+
+const traducaoTipos = {
+    normal: "Normal",
+    fire: "Fogo",
+    water: "Água",
+    electric: "Elétrico",
+    grass: "Planta",
+    ice: "Gelo",
+    fighting: "Lutador",
+    poison: "Venenoso",
+    ground: "Terra",
+    flying: "Voador",
+    psychic: "Psíquico",
+    bug: "Inseto",
+    rock: "Pedra",
+    ghost: "Fantasma",
+    dragon: "Dragão",
+    dark: "Sombrio",
+    steel: "Aço",
+    fairy: "Fada"
+};
 
 async function buscarPokemon(nome) {
     const resposta = await fetch(
@@ -23,18 +45,22 @@ function mostrarCarta(pokemon) {
         || pokemon.sprites.front_default;
 
     const tipos = pokemon.types.map(function(item) {
-        return '<span class="tipo">' + item.type.name + '</span>';
+        const tipo = item.type.name;
+        return '<span class="tipo">' + traducaoTipos[tipo] + '</span>';
     }).join("");
 
     const nomesAtributos = {
         hp: "HP",
         attack: "Ataque",
         defense: "Defesa",
+        "special-attack": "Ataque especial",
+        "special-defense": "Defesa especial",
         speed: "Velocidade"
     };
 
     const atributos = pokemon.stats.filter(function(item) {
-        return Object.keys(nomesAtributos).includes(item.stat.name);
+        return ["hp", "attack", "defense", "speed"]
+            .includes(item.stat.name);
     }).map(function(item) {
         const valor = item.base_stat;
         const porcentagem = Math.min(valor / 150 * 100, 100);
@@ -56,8 +82,10 @@ function mostrarCarta(pokemon) {
 
     resultado.innerHTML = `
         <article class="carta">
-            <p>#${pokemon.id}</p>
+            <p>Número: #${pokemon.id}</p>
+
             <img src="${imagem}" alt="${nome}">
+
             <h2>${nome}</h2>
 
             <div class="tipos">${tipos}</div>
@@ -68,6 +96,7 @@ function mostrarCarta(pokemon) {
             </p>
 
             <h3>Atributos</h3>
+
             ${atributos}
         </article>
     `;
@@ -94,7 +123,8 @@ formulario.addEventListener("submit", async function(event) {
         mostrarCarta(pokemon);
         mensagem.textContent = "";
     } catch (erro) {
-        mensagem.textContent = "Pokémon não encontrado ou erro de conexão.";
+        mensagem.textContent =
+            "Pokémon não encontrado ou erro de conexão.";
     }
 
     campoNome.focus();

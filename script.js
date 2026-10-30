@@ -3,10 +3,9 @@ const campoNome = document.getElementById("nome-pokemon");
 const resultado = document.getElementById("resultado");
 const mensagem = document.getElementById("mensagem");
 
-
 async function buscarPokemon(nome) {
     const resposta = await fetch(
-        `https://pokeapi.co/api/v2/pokemon/${nome}`
+        "https://pokeapi.co/api/v2/pokemon/" + nome
     );
 
     if (!resposta.ok) {
@@ -16,7 +15,6 @@ async function buscarPokemon(nome) {
     return await resposta.json();
 }
 
-
 function mostrarCarta(pokemon) {
     const nome = pokemon.name.charAt(0).toUpperCase()
         + pokemon.name.slice(1);
@@ -24,9 +22,9 @@ function mostrarCarta(pokemon) {
     const imagem = pokemon.sprites.other["official-artwork"].front_default
         || pokemon.sprites.front_default;
 
-    const tipos = pokemon.types.map(item =>
-        `<span class="tipo">${item.type.name}</span>`
-    ).join("");
+    const tipos = pokemon.types.map(function(item) {
+        return '<span class="tipo">' + item.type.name + '</span>';
+    }).join("");
 
     const nomesAtributos = {
         hp: "HP",
@@ -35,27 +33,26 @@ function mostrarCarta(pokemon) {
         speed: "Velocidade"
     };
 
-    const atributos = pokemon.stats
-        .filter(item => Object.keys(nomesAtributos)
-            .includes(item.stat.name))
-        .map(item => {
-            const valor = item.base_stat;
-            const porcentagem = Math.min(valor / 150 * 100, 100);
+    const atributos = pokemon.stats.filter(function(item) {
+        return Object.keys(nomesAtributos).includes(item.stat.name);
+    }).map(function(item) {
+        const valor = item.base_stat;
+        const porcentagem = Math.min(valor / 150 * 100, 100);
 
-            return `
-                <div class="atributo">
-                    <div class="atributo-topo">
-                        <span>${nomesAtributos[item.stat.name]}</span>
-                        <span>${valor}</span>
-                    </div>
-                    <div class="barra">
-                        <div class="barra-preenchida"
-                            style="width: ${porcentagem}%">
-                        </div>
+        return `
+            <div class="atributo">
+                <div class="atributo-topo">
+                    <span>${nomesAtributos[item.stat.name]}</span>
+                    <span>${valor}</span>
+                </div>
+                <div class="barra">
+                    <div class="barra-preenchida"
+                        style="width: ${porcentagem}%">
                     </div>
                 </div>
-            `;
-        }).join("");
+            </div>
+        `;
+    }).join("");
 
     resultado.innerHTML = `
         <article class="carta">
@@ -75,7 +72,6 @@ function mostrarCarta(pokemon) {
         </article>
     `;
 }
-
 
 formulario.addEventListener("submit", async function(event) {
     event.preventDefault();
@@ -98,9 +94,7 @@ formulario.addEventListener("submit", async function(event) {
         mostrarCarta(pokemon);
         mensagem.textContent = "";
     } catch (erro) {
-        mensagem.textContent = erro.message === "Failed to fetch"
-            ? "Erro de conexão. Verifique sua internet."
-            : erro.message;
+        mensagem.textContent = "Pokémon não encontrado ou erro de conexão.";
     }
 
     campoNome.focus();
